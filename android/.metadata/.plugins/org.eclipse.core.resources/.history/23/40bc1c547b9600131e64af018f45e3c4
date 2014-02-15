@@ -66,11 +66,11 @@ public class ColorSelectorFragment extends Fragment implements OnColorChangedLis
         
         picker = (ColorPicker) rootView.findViewById(R.id.picker);
         saturationBar = (SaturationBar) rootView.findViewById(R.id.saturationbar);
-        //valueBar = (ValueBar) rootView.findViewById(R.id.valuebar);
+        valueBar = (ValueBar) rootView.findViewById(R.id.valuebar);
         button = (Button) rootView.findViewById(R.id.buttonSet);
 
     
-        picker.addSaturationBar(saturationBar);
+        //picker.addSaturationBar(saturationBar);
         //picker.addValueBar(valueBar);
         picker.setOnColorChangedListener(this);
         
@@ -90,15 +90,13 @@ public class ColorSelectorFragment extends Fragment implements OnColorChangedLis
 		        Color.colorToHSV(color, hsv);
 		        
 		        int hue = (int)(hsv[0]*182);
-		        int saturation = (int)(hsv[1]*255);
-		        Log.d("saturation", String.valueOf(saturation));
+		        Log.d("hue", String.valueOf(hue));
 		        for (PHLight light : allLights) {
 		            PHLightState lightState = new PHLightState();
 		            // To validate your lightstate is valid (before sending to the bridge) you can use:  
 		            // String validState = lightState.validateState();
 		            
 		            lightState.setHue(hue);
-		            lightState.setSaturation(saturation-1);
 		            bridge.updateLightState(light, lightState, listener);
 		            //bridge.updateLightState(light, lightState);   // If no bridge response is required then use this simpler form.
 		        }		

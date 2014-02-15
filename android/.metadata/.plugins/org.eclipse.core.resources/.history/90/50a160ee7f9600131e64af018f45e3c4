@@ -57,8 +57,8 @@ public class BrightnessFragment extends Fragment implements SeekBar.OnSeekBarCha
             // String validState = lightState.validateState();
             
             lightState.setBrightness(value);
-            bridge.updateLightState(light, lightState);
-            //bridge.updateLightState(light, lightState, listener);   // If no bridge response is required then use this simpler form.
+            bridge.updateLightState(light, lightState, listener);
+            //bridge.updateLightState(light, lightState);   // If no bridge response is required then use this simpler form.
         }	
         
     }

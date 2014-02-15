@@ -51,15 +51,6 @@ public class BrightnessFragment extends Fragment implements SeekBar.OnSeekBarCha
         PHBridge bridge = phHueSDK.getSelectedBridge();
         List<PHLight> allLights = bridge.getResourceCache().getAllLights();
         
-        for (PHLight light : allLights) {
-            PHLightState lightState = new PHLightState();
-            // To validate your lightstate is valid (before sending to the bridge) you can use:  
-            // String validState = lightState.validateState();
-            
-            lightState.setBrightness(value);
-            bridge.updateLightState(light, lightState);
-            //bridge.updateLightState(light, lightState, listener);   // If no bridge response is required then use this simpler form.
-        }	
         
     }
 }
