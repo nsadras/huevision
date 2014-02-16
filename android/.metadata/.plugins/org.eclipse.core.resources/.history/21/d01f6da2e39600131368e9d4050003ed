@@ -1,0 +1,39 @@
+package com.huevision.threads;
+
+
+public class HueMaster extends Thread{
+	protected int ref;
+	protected HueWriter writer;
+	protected SensorListener listener;
+	static final double P = .2;
+	
+	public HueMaster(HueWriter writer, SensorListener listener){
+		this.ref = 1759;
+		this.writer = writer;
+		this.listener = listener;
+	}
+	
+	public void nullifyRef(){
+		this.ref = 1759;
+	}
+	
+	public void setRef(int ref){
+		this.ref = ref;
+	}
+	
+	public void run(){
+		while(true){
+			if (this.ref==1759){
+				double err = ref-listener.getValue();
+				for(int i = 0; i < 3; i++){
+					writers[i].setBri((int)(writers[i].getBri() + Math.floor(P*err)));
+				}				
+			}
+			try{
+				Thread.sleep(100);
+			}catch(InterruptedException e){
+				// shut up
+			}
+		}
+	}
+}

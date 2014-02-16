@@ -5,15 +5,10 @@ import java.util.List;
 import java.util.Random;
 
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +16,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.huevision.threads.HueWriter;
+import com.huevision.threads.SensorListener;
 import com.larswerkman.holocolorpicker.ColorPicker;
 import com.larswerkman.holocolorpicker.ColorPicker.OnColorChangedListener;
 import com.larswerkman.holocolorpicker.SaturationBar;
@@ -53,6 +50,7 @@ public class ColorSelectorFragment extends Fragment implements OnColorChangedLis
 	private SaturationBar saturationBar;
 	private ValueBar valueBar;
 	private Button button;
+	private static Button onOffButton;
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,18 +61,30 @@ public class ColorSelectorFragment extends Fragment implements OnColorChangedLis
         phHueSDK = PHHueSDK.create();
         
         //setUpBluetooth();
-        
+       
         picker = (ColorPicker) rootView.findViewById(R.id.picker);
         saturationBar = (SaturationBar) rootView.findViewById(R.id.saturationbar);
         //valueBar = (ValueBar) rootView.findViewById(R.id.valuebar);
         button = (Button) rootView.findViewById(R.id.buttonSet);
-
+        onOffButton = (Button) rootView.findViewById(R.id.onOff);
     
         picker.addSaturationBar(saturationBar);
         //picker.addValueBar(valueBar);
         picker.setOnColorChangedListener(this);
         
-
+        onOffButton.setOnClickListener(new OnClickListener(){
+        	@Override
+        	public void onClick(View v){
+        		HueWriter hueWriter = ((MainActivity) getActivity()).hueWriter;
+        		if(hueWriter.getOn()){
+        			onOffButton.setText("On");
+        		}else{
+        			onOffButton.setText("Off");
+        		}
+        		hueWriter.setOn(!hueWriter.getOn());
+        		
+        	}
+        });
         /**randomButton = (Button) findViewById(R.id.buttonRand);**/
         button.setOnClickListener(new OnClickListener() {
 
@@ -91,8 +101,12 @@ public class ColorSelectorFragment extends Fragment implements OnColorChangedLis
 		        
 		        int hue = (int)(hsv[0]*182);
 		        int saturation = (int)(hsv[1]*255);
-		        Log.d("saturation", String.valueOf(saturation));
-		        for (PHLight light : allLights) {
+		        //Log.d("saturation", String.valueOf(saturation));
+		        
+		        HueWriter hueWriter = ((MainActivity) getActivity()).hueWriter;
+		        hueWriter.setHue(hue);
+		        hueWriter.setSat(saturation);
+		        /**for (PHLight light : allLights) {
 		            PHLightState lightState = new PHLightState();
 		            // To validate your lightstate is valid (before sending to the bridge) you can use:  
 		            // String validState = lightState.validateState();
@@ -101,9 +115,14 @@ public class ColorSelectorFragment extends Fragment implements OnColorChangedLis
 		            lightState.setSaturation(saturation-1);
 		            bridge.updateLightState(light, lightState, listener);
 		            //bridge.updateLightState(light, lightState);   // If no bridge response is required then use this simpler form.
-		        }		
+		        }**/
+		        
+		        SensorListener listener = ((MainActivity) getActivity()).sensorListener;
+		        String response = listener.getRValue() + " | " + listener.getValue() + " | " + listener.getLValue();
+		        Log.d("server", response);
         	}
         });
+        button.performClick();
         return rootView;
     }
 	
@@ -113,6 +132,9 @@ public class ColorSelectorFragment extends Fragment implements OnColorChangedLis
 	public void onColorChanged(int color) {
     	
 	}
+    public void onStopTrackingTouch(){
+    	
+    }
 
     /**
     public void setUpBluetooth(){

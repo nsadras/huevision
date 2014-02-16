@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;com.huevision.threads.HueController&apos; to &apos;HueMaster&apos;&#x0A;- Original project: &apos;HueVision&apos;&#x0A;- Original element: &apos;com.huevision.threads.HueController&apos;&#x0A;- Renamed element: &apos;com.huevision.threads.HueMaster&apos;&#x0A;- Update references to refactored element&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;HueController&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;com.huevision.threads{HueController.java[HueController" matchStrategy="1" name="HueMaster" qualified="false" references="true" similarDeclarations="false" stamp="1392520212942" textual="false" version="1.0"/>
+</session>

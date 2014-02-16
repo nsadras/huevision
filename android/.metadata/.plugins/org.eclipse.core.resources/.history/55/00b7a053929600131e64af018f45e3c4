@@ -1,0 +1,11 @@
+package com.huevision.threads;
+
+public class HueController extends Thread{
+	protected int target;
+	protected SensorListener listener;
+	
+	public HueController(SensorListener listener){
+		this.listener = listener;
+		this.target = 125;
+	}
+}

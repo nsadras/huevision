@@ -27,16 +27,29 @@
     	android:layout_marginTop="20dp"/>
 	
 	
-    
-    <Button
-        android:id="@+id/buttonSet"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/saturationbar"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="56dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:text="Set Color" />
+        android:layout_marginTop="50dp"
+        android:gravity="center">
+	    <Button
+	        android:id="@+id/buttonSet"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:paddingLeft="10dp"
+	        android:paddingRight="10dp"
+	        android:layout_marginRight="20dp"
+	        android:text="Set Color" />
+
+	    <Button
+	        android:id="@+id/onOff"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginLeft="20dp"
+	        android:text="On" />
+
+    </LinearLayout>
 
 </RelativeLayout>

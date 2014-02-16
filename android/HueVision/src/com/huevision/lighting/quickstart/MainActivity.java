@@ -9,22 +9,40 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 
 import com.huevision.adapters.TabsPagerAdapter;
+import com.huevision.threads.HueMaster;
+import com.huevision.threads.HueWriter;
+import com.huevision.threads.SensorListener;
 import com.philips.lighting.quickstart.R;
  
 public class MainActivity extends FragmentActivity implements
         ActionBar.TabListener {
- 
+	
+	public SensorListener sensorListener;
+	public HueWriter hueWriter;
+	public HueMaster hueMaster;
+	
     private ViewPager viewPager;
     private TabsPagerAdapter mAdapter;
     private ActionBar actionBar;
     // Tab titles
     private String[] tabs = { "Colors", "Brightness" };
+
  
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle(R.string.app_name);
+        
+        //phHueSDK = PHHueSDK.create();
+        //bridge = phHueSDK.getSelectedBridge();
+        
+        sensorListener = new SensorListener();
+        sensorListener.start();
+        hueWriter = new HueWriter(3);
+        hueWriter.start();
+        hueMaster = new HueMaster(hueWriter,sensorListener);
+        hueMaster.start();
         
         getActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM | ActionBar.DISPLAY_SHOW_HOME); 
  

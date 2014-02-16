@@ -1,0 +1,32 @@
+package com.huevision.threads;
+
+import java.util.List;
+
+import com.philips.lighting.hue.sdk.PHHueSDK;
+import com.philips.lighting.model.PHBridge;
+import com.philips.lighting.model.PHLight;
+import com.philips.lighting.model.PHLightState;
+
+public class HueMaster extends Thread{
+	protected int ref;
+	protected HueWriter writer;
+	protected SensorListener listener;
+	
+	public HueMaster(HueWriter writer, SensorListener listener){
+		this.ref = 1759;
+		this.writer = writer;
+		this.listener = listener;
+	}
+	
+	public void nullifyRef(){
+		this.ref = 1759;
+	}
+	
+	public void setRef(int ref){
+		this.ref = ref;
+	}
+	
+	public void run(){
+		
+	}
+}

@@ -1,0 +1,54 @@
+package com.huevision.threads;
+
+import java.util.List;
+
+import com.philips.lighting.hue.sdk.PHHueSDK;
+import com.philips.lighting.model.PHBridge;
+import com.philips.lighting.model.PHLight;
+import com.philips.lighting.model.PHLightState;
+
+public class HueController extends Thread{
+	protected int target;
+	protected SensorListener listener;
+	private PHHueSDK phHueSDK;
+	
+	public HueController(SensorListener listener){
+		this.listener = listener;
+		this.target = 125;
+		phHueSDK = PHHueSDK.create();
+	}
+	
+	public void setTarget(int newTarget){
+		this.target = newTarget;
+	}
+	
+	public void run(){
+		PHBridge bridge = phHueSDK.getSelectedBridge();
+        List<PHLight> allLights = bridge.getResourceCache().getAllLights();
+		// feedback loop
+		while(true){
+			double curr_brightness = listener.getValue(); // TODO: scale to [0,255]
+			PHLightState lightState = new PHLightState();
+            // To validate your lightstate is valid (before sending to the bridge) you can use:  
+            // String validState = lightState.validateState();
+            
+            int increment = 0;
+			if(curr_brightness > target){
+				increment = -5;
+			}else if(curr_brightness < target){
+				increment = 5;
+			}
+			
+			for (PHLight light : allLights) {
+	            // To validate your lightstate is valid (before sending to the bridge) you can use:  
+	            // String validState = lightState.validateState();
+	            lightState.setBrightness(lightState.getBrightness()+increment);
+	            bridge.updateLightState(light, lightState);
+	            //bridge.updateLightState(light, lightState, listener);   // If no bridge response is required then use this simpler form.
+	        }
+			
+			
+					
+		}
+	}
+}

@@ -1,0 +1,84 @@
+package com.huevision.threads;
+
+import java.net.URL;
+
+import android.util.Log;
+
+import com.philips.lighting.hue.sdk.PHHueSDK;
+import com.philips.lighting.model.PHBridge;
+import com.philips.lighting.model.PHLightState;
+
+public class HueWriter extends Thread{
+    protected int hue;
+    protected int sat;
+    protected int bri;
+    protected boolean on;
+    protected int myLight;
+    private PHHueSDK phHueSDK;
+    public HueWriter(int myLight){
+        this.myLight = myLight;
+        this.on=true;
+        this.hue=0;
+        this.sat=0;
+        this.bri=0;
+        this.phHueSDK = PHHueSDK.create();
+    }
+    
+    public void setHue(int h){this.hue=h;}
+    public void setSat(int s){this.sat=s;}
+    public void setBri(int b){this.bri=b;}
+    public void setHSV(int h, int s, int b){this.hue=h; this.sat=s; this.bri=b;}
+    public void setOn(boolean on){this.on=on;}
+    
+    int getBri(){return bri;}
+    int getSat(){return sat;}
+    int getHue(){return hue;}
+    
+    public void run(){
+        try{
+            URL hue_url = new URL("http://192.168.1.120/api/arctangent1759/lights/"+myLight+"/state");
+            PHBridge bridge = phHueSDK.getSelectedBridge();
+            while(true){
+            	/**
+                HttpURLConnection httpCon = (HttpURLConnection) hue_url.openConnection();
+                httpCon.setDoOutput(true);
+                httpCon.setRequestMethod("PUT");
+                OutputStreamWriter out = new OutputStreamWriter(httpCon.getOutputStream());
+                out.write("{\"hue\":"+this.hue+", \"sat\":"+this.sat+", \"bri\":"+this.bri+", \"on\":"+this.on+"}");
+                out.close();
+                httpCon.getInputStream();
+            	**/
+            	
+            	PHLightState lightState = new PHLightState();
+	            // To validate your lightstate is valid (before sending to the bridge) you can use:  
+	            // String validState = lightState.validateState();
+	            
+	            lightState.setHue(hue);
+	            lightState.setSaturation(sat-1);
+	            lightState.setBrightness(bri);
+	            bridge.updateLightState(bridge.getResourceCache().getAllLights().get(myLight), lightState);
+	            
+                Thread.sleep(5);
+                Log.d("WHAI", "WHAI");
+            }
+        }catch (Exception e){System.out.println(e);System.exit(-1);}
+    }
+    public static void main(String[] args){
+        HueWriter h1 = new HueWriter(1);
+        HueWriter h2 = new HueWriter(2);
+        HueWriter h3 = new HueWriter(3);
+        h1.start();
+        h2.start();
+        h3.start();
+        int t = 0;
+        while (true){
+            try{
+                t=t+1;
+                h1.setHSV((int)Math.floor(65535*0.5*(Math.sin(.1*t)+1)),(int)Math.floor(255*0.5*(Math.sin(.3*t)+1)),(int)Math.floor(255*0.5*(Math.sin(.5*t)+1)));
+                h2.setHSV((int)Math.floor(65535*0.5*(Math.sin(.1*t)+1)),(int)Math.floor(255*0.5*(Math.sin(.3*t)+1)),(int)Math.floor(255*0.5*(Math.sin(.5*t)+1)));
+                h3.setHSV((int)Math.floor(65535*0.5*(Math.sin(.1*t)+1)),(int)Math.floor(255*0.5*(Math.sin(.3*t)+1)),(int)Math.floor(255*0.5*(Math.sin(.5*t)+1)));
+                Thread.sleep(1000);
+            }catch(Exception e){System.out.println(e);System.exit(-1);}
+        }
+    }
+}

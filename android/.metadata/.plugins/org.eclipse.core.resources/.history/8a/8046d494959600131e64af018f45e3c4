@@ -1,0 +1,40 @@
+package com.huevision.threads;
+
+import java.util.List;
+
+import com.philips.lighting.hue.sdk.PHHueSDK;
+import com.philips.lighting.model.PHBridge;
+import com.philips.lighting.model.PHLight;
+
+public class HueController extends Thread{
+	protected int target;
+	protected SensorListener listener;
+	private PHHueSDK phHueSDK;
+	
+	public HueController(SensorListener listener){
+		this.listener = listener;
+		this.target = 125;
+		phHueSDK = PHHueSDK.create();
+	}
+	
+	public void setTarget(int newTarget){
+		this.target = newTarget;
+	}
+	
+	public void run(){
+		PHBridge bridge = phHueSDK.getSelectedBridge();
+        List<PHLight> allLights = bridge.getResourceCache().getAllLights();
+		// feedback loop
+		while(true){
+			double curr_brightness = listener.getValue(); // TODO: scale to [0,255]
+			
+			if(curr_brightness > target){
+				
+			} else if(curr_brightness > target){
+				
+			}
+			
+			
+		}
+	}
+}

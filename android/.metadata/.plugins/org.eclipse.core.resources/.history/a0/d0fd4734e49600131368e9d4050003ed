@@ -1,0 +1,75 @@
+package com.huevision.lighting.quickstart;
+
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.SeekBar;
+
+import com.huevision.threads.HueMaster;
+import com.huevision.threads.HueWriter;
+import com.philips.lighting.quickstart.R;
+//import com.philips.lighting.hue.sdk.PHHueSDK;
+//import com.philips.lighting.model.PHHueError;
+
+public class BrightnessFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
+	
+	private SeekBar valueBar;
+	private Button syncButton;
+	//private PHHueSDK phHueSDK;
+	@Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+ 
+        View rootView = inflater.inflate(R.layout.fragment_brightness, container, false);
+        
+        valueBar=(SeekBar) rootView.findViewById(R.id.valuebar);
+        valueBar.setOnSeekBarChangeListener(this); 
+        
+        syncButton = (Button) rootView.findViewById(R.id.sync);
+        syncButton.setOnClickListener(new OnClickListener(){
+        	@Override
+        	public void onClick(View v){
+        		//magic goes here
+                HueMaster hueMaster = ((MainActivity) getActivity()).hueMaster;
+        	}
+        });
+        
+
+        return rootView;
+    }
+	
+	public void onProgressChanged(SeekBar seekBar, int progress,
+            boolean fromUser) {
+                        // Log the progress
+        Log.d("brightness", "Brightness is: "+progress);
+                        
+    }
+
+    public void onStartTrackingTouch(SeekBar seekBar) {}
+
+    public void onStopTrackingTouch(SeekBar seekBar) {
+    	Log.d("brightness-after", "Brightness is: "+ seekBar.getProgress());
+        int value = (int) (seekBar.getProgress() * 2.55);
+        HueWriter hueWriter = ((MainActivity) getActivity()).hueWriter;
+	    hueWriter.setBri(value);
+        //PHBridge bridge = phHueSDK.getSelectedBridge();
+        //List<PHLight> allLights = bridge.getResourceCache().getAllLights();
+        /*
+        for (PHLight light : allLights) {
+            PHLightState lightState = new PHLightState();
+            // To validate your lightstate is valid (before sending to the bridge) you can use:  
+            // String validState = lightState.validateState();
+            
+            lightState.setBrightness(value);
+            bridge.updateLightState(light, lightState);
+            //bridge.updateLightState(light, lightState, listener);   // If no bridge response is required then use this simpler form.
+        }
+        */	
+        
+    }
+}
